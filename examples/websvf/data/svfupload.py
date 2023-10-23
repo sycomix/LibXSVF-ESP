@@ -19,9 +19,13 @@ class Progress(object):
         self._progress = 0.0;
         self._numberOfBars = 40
         self._numberOfBarsDisplayed = 0
-        
+
         #print the initial progress meter
-        sys.stdout.write(self._title + " [" + "-"* self._numberOfBars +"] %.2f%%" % (self._progress * 100.0))
+        sys.stdout.write(
+            f"{self._title} ["
+            + "-" * self._numberOfBars
+            + "] %.2f%%" % (self._progress * 100.0)
+        )
         sys.stdout.flush();
 
     def update(self, total, size, args = 0):
@@ -82,15 +86,14 @@ def upload(path, sdCardIP, directory="/"):
     file = file_with_callback(path, 'rb', progress.update, path)
     # Upload the file using "poster" module
     register_openers()
-    url = "http://%s" % (sdCardIP)
+    url = f"http://{sdCardIP}"
     values = { 'file':file }
     data, headers = multipart_encode(values)
     headers['User-Agent'] = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
     request = urllib2.Request(url, data, headers)
     # time.sleep(1)
     response = urllib2.urlopen(request)
-    the_page = response.read();
-    return the_page;
+    return response.read()
             
 def print_usage():
     print "svfuploader.py <Hostname_or_IP> <filename>"
